@@ -44,7 +44,7 @@ class Money
      * @return static
      * @throws \Kane\Currency\DifferenceException
      */
-    public function sub(Money $object)
+    public function sub(Money ...$object)
     {
         return static::eval(array_merge(['-', $this], $object));
     }
@@ -54,7 +54,7 @@ class Money
      * @return static
      * @throws \Kane\Currency\DifferenceException
      */
-    public function mul(Money $object)
+    public function mul(Money ...$object)
     {
         return static::eval(array_merge(['*', $this], $object));
     }
