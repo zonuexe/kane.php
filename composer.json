@@ -10,7 +10,7 @@
         }
     ],
     "autoload": {
-        "files": ["src/functions.php"],
+        "files": ["src/kane.php"],
         "psr-4": {
             "Kane\\": "src/"
         }
