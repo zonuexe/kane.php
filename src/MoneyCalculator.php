@@ -90,13 +90,13 @@ trait MoneyCalculator
         $v1 = array_shift($operands);
         $v2 = array_shift($operands);
 
-        array_unshift($operands, bcadd($v1, $v2, $scale));
+        array_unshift($operands, bcsub($v1, $v2, $scale));
 
         if (count($operands) < 2) {
             return $operands[0];
         }
 
-        return self::bcadd($scale, ...$operands);
+        return self::bcsub($scale, ...$operands);
     }
 
     private static function bcmul(int $scale, string ...$operands)
