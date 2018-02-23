@@ -45,15 +45,15 @@ trait MoneyCalculator
         $amount = null;
 
         switch ($operator) {
-        case '+':
-            $amount = self::bcadd($operands[0]->scale, ...$operands);
-            break;
-        case '-':
-            $amount = self::bcsub($operands[0]->scale, ...$operands);
-            break;
-        case '*':
-            $amount = self::bcmul($operands[0]->scale, ...$operands);
-            break;
+            case '+':
+                $amount = self::bcadd($operands[0]->scale, ...$operands);
+                break;
+            case '-':
+                $amount = self::bcsub($operands[0]->scale, ...$operands);
+                break;
+            case '*':
+                $amount = self::bcmul($operands[0]->scale, ...$operands);
+                break;
         }
 
         return new static($amount, $operands[0]->currency, $operands[0]->scale);
@@ -66,47 +66,53 @@ trait MoneyCalculator
                 throw new \BadMethodCallException();
             case 1:
                 return $operands[0];
-            default:
-                $v1 = array_shift($operands);
-                $v2 = array_shift($operands);
-
-                array_unshift($operands, bcadd($v1, $v2, $scale));
-
-                return self::bcadd($scale, ...$operands);
         }
+
+        $v1 = array_shift($operands);
+        $v2 = array_shift($operands);
+
+        array_unshift($operands, bcadd($v1, $v2, $scale));
+
+        return self::bcadd($scale, ...$operands);
     }
 
     private static function bcsub(int $scale, string ...$operands)
     {
         switch (count($operands)) {
-        case 0:
-            throw new \BadMethodCallException();
-        case 1:
-            return bcmul($operands[0], -1, $scale);
-        default:
-            $v1 = array_shift($operands);
-            $v2 = array_shift($operands);
-
-            array_unshift($operands, bcadd($v1, $v2, $scale));
-
-            return self::bcadd($scale, ...$operands);
+            case 0:
+                throw new \BadMethodCallException();
+            case 1:
+                return bcmul($operands[0], -1, $scale);
         }
+
+        $v1 = array_shift($operands);
+        $v2 = array_shift($operands);
+
+        array_unshift($operands, bcadd($v1, $v2, $scale));
+
+        if (count($operands) < 2) {
+            return $operands[0];
+        }
+
+        return self::bcadd($scale, ...$operands);
     }
 
     private static function bcmul(int $scale, string ...$operands)
     {
         switch (count($operands)) {
             case 0:
-            case 1:
                 throw new \BadMethodCallException();
+            case 1:
+                return $operands[0];
             default:
-                $v1 = array_shift($operands);
-                $v2 = array_shift($operands);
-
-                array_unshift($operands, bcmul($v1, $v2, $scale));
-
-                return self::bcmul($scale, ...$operands);
         }
+
+        $v1 = array_shift($operands);
+        $v2 = array_shift($operands);
+
+        array_unshift($operands, bcmul($v1, $v2, $scale));
+
+        return self::bcmul($scale, ...$operands);
     }
 
     private static function assertOperands(Money ...$operands): void
