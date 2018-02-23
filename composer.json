@@ -1,0 +1,23 @@
+{
+    "name": "zonuexe/phperkaigi-unit",
+    "description": "Idol time is Money.",
+    "type": "library",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "USAMI Kenta",
+            "email": "tadsan@zonu.me"
+        }
+    ],
+    "autoload": {
+        "files": ["src/functions.php"],
+        "psr-4": {
+            "Kane\\": "src/"
+        }
+    },
+    "require": {
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.0"
+    }
+}
