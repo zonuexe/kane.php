@@ -14,18 +14,18 @@ trait MoneyCalculator
     /**
      * Evaluate expression
      *
-     * @param array $expr
+     * @param  string[]|\Kane\Money[] ...$expr
      * @return bool|static
      * @throws \Kane\Currency\DifferenceException
      * @throws \Kane\Currency\ScaleMismatchException
      */
-    public static function eval(array $expr)
+    public static function eval(...$expr)
     {
         $operator = array_shift($expr);
         $operands = [];
 
         foreach ($expr as $obj) {
-            $operands[] = is_array($obj) ? self::eval($obj) : $obj;
+            $operands[] = is_array($obj) ? self::eval(...$obj) : $obj;
         }
 
         return self::eval1($operator, ...$operands);

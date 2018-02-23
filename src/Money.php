@@ -37,7 +37,7 @@ class Money
      */
     public function add(Money ...$object)
     {
-        return static::eval(array_merge(['+', $this], $object));
+        return static::eval('+', $this, ...$object);
     }
 
     /**
@@ -48,7 +48,7 @@ class Money
      */
     public function sub(Money ...$object)
     {
-        return static::eval(array_merge(['-', $this], $object));
+        return static::eval('-', $this, ...$object);
     }
 
     /**
@@ -59,7 +59,7 @@ class Money
      */
     public function mul(Money ...$object)
     {
-        return static::eval(array_merge(['*', $this], $object));
+        return static::eval('*', $this, $object);
     }
 
     public function __toString()
