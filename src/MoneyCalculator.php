@@ -17,6 +17,7 @@ trait MoneyCalculator
      * @param array $expr
      * @return bool|static
      * @throws \Kane\Currency\DifferenceException
+     * @throws \Kane\Currency\ScaleMismatchException
      */
     public static function eval(array $expr)
     {
@@ -37,6 +38,7 @@ trait MoneyCalculator
      * @param \Kane\Money[] ...$operands
      * @return bool|static
      * @throws \Kane\Currency\DifferenceException
+     * @throws \Kane\Currency\ScaleMismatchException
      */
     private static function eval1(string $operator, Money ...$operands)
     {
@@ -115,6 +117,11 @@ trait MoneyCalculator
         return self::bcmul($scale, ...$operands);
     }
 
+    /**
+     * @param \Kane\Money[] ...$operands
+     * @throws \Kane\Currency\DifferenceException
+     * @throws \Kane\Currency\ScaleMismatchException
+     */
     private static function assertOperands(Money ...$operands): void
     {
         $currencies = [];
@@ -130,7 +137,7 @@ trait MoneyCalculator
             $scales[] = $obj->scale;
         }
         if (count(array_unique($scales)) !== 1) {
-            throw new Currency\DifferenceException(var_export(array_map(null, $operands, $scales), true));
+            throw new Currency\ScaleMismatchException(var_export(array_map(null, $operands, $scales), true));
         }
     }
 }

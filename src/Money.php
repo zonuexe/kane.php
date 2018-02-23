@@ -33,6 +33,7 @@ class Money
      * @param \Kane\Money $object
      * @return static
      * @throws \Kane\Currency\DifferenceException
+     * @throws \Kane\Currency\ScaleMismatchException
      */
     public function add(Money ...$object)
     {
@@ -43,6 +44,7 @@ class Money
      * @param \Kane\Money $object
      * @return static
      * @throws \Kane\Currency\DifferenceException
+     * @throws \Kane\Currency\ScaleMismatchException
      */
     public function sub(Money ...$object)
     {
@@ -53,6 +55,7 @@ class Money
      * @param \Kane\Money $object
      * @return static
      * @throws \Kane\Currency\DifferenceException
+     * @throws \Kane\Currency\ScaleMismatchException
      */
     public function mul(Money ...$object)
     {
