@@ -8,21 +8,26 @@ namespace Kane;
  * @author    USAMI Kenta <tadsan@zonu.me>
  * @copyright 2018 USAMI Kenta
  * @license   http://www.apache.org/licenses/LICENSE-2.0 Apache-2.0
+ * @psalm-immutable
+ * @template C of Currency
  */
 class Money
 {
     use MoneyCalculator;
 
-    /** @var string */
-    private $amount;
+    /** @var numeric-string */
+    private string $amount;
 
-    /** @var Currency */
-    private $currency;
+    private Currency $currency;
 
     /** @var int */
-    private $scale;
+    private int $scale;
 
-    public function __construct(string $amount, Currency $currency, int $scale)
+    /**
+     * @param numeric-string $amount
+     * @psalm-param C $currency
+     */
+    final public function __construct(string $amount, Currency $currency, int $scale)
     {
         $this->amount = $amount;
         $this->currency = $currency;
@@ -30,8 +35,9 @@ class Money
     }
 
     /**
-     * @param \Kane\Money $object
      * @return static
+     * @psalm-param Money<C> $object
+     * @psalm-return Money<C>
      * @throws \Kane\Currency\DifferenceException
      * @throws \Kane\Currency\ScaleMismatchException
      */
@@ -41,8 +47,9 @@ class Money
     }
 
     /**
-     * @param \Kane\Money $object
      * @return static
+     * @psalm-param Money<C> $object
+     * @psalm-return Money<C>
      * @throws \Kane\Currency\DifferenceException
      * @throws \Kane\Currency\ScaleMismatchException
      */
@@ -52,8 +59,9 @@ class Money
     }
 
     /**
-     * @param \Kane\Money $object
      * @return static
+     * @psalm-param Money<C> $object
+     * @psalm-return Money<C>
      * @throws \Kane\Currency\DifferenceException
      * @throws \Kane\Currency\ScaleMismatchException
      */
@@ -62,6 +70,9 @@ class Money
         return static::eval('*', $this, $object);
     }
 
+    /**
+     * @return numeric-string
+     */
     public function __toString()
     {
         return $this->amount;

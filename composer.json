@@ -20,9 +20,21 @@
         "ext-bcmath": "*"
     },
     "require-dev": {
+        "bamarni/composer-bin-plugin": "^1.4",
         "phpunit/phpunit": "^9.5"
     },
     "config": {
         "sort-packages": true
-    }
+    },
+    "extra": {
+        "bamarni-bin": {
+            "target-directory": "tools"
+        }
+    },
+	"scripts": {
+        "phan": "phan",
+        "psalm": "psalm",
+		"stan": "phpstan analyse",
+		"test": "phpunit"
+	}
 }
