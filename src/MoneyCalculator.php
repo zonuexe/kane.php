@@ -81,7 +81,7 @@ trait MoneyCalculator
 
     /**
      * @pure
-     * @param array<Money|numeric-string> $operands
+     * @param Money|numeric-string $operands
      * @return numeric-string
      */
     private static function bcadd(int $scale, ...$operands): string
@@ -105,7 +105,7 @@ trait MoneyCalculator
 
     /**
      * @pure
-     * @param array<Money|numeric-string> $operands
+     * @param Money|numeric-string $operands
      * @return numeric-string
      */
     private static function bcsub(int $scale, ...$operands): string
@@ -133,7 +133,7 @@ trait MoneyCalculator
 
     /**
      * @pure
-     * @param array<Money|numeric-string> $operands
+     * @param Money|numeric-string $operands
      * @return numeric-string
      */
     private static function bcmul(int $scale, ...$operands): string
