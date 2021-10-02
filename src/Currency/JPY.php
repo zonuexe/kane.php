@@ -9,6 +9,7 @@ namespace Kane\Currency;
  * @copyright 2018 USAMI Kenta
  * @license   http://www.apache.org/licenses/LICENSE-2.0 Apache-2.0
  * @link https://en.wikipedia.org/wiki/Japanese_yen
+ * @psalm-immutable
  */
 final class JPY extends \Kane\Currency
 {
