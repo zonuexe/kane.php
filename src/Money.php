@@ -13,6 +13,7 @@ namespace Kane;
  */
 class Money
 {
+    /** @psalm-suppress MutableDependency */
     use MoneyCalculator;
 
     /** @var numeric-string */

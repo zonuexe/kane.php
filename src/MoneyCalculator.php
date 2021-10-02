@@ -2,26 +2,44 @@
 
 namespace Kane;
 
+use function assert;
+use function array_map;
+use function array_shift;
+use function array_unique;
+use function array_unshift;
+use function bcadd;
+use function bcmul;
+use function bcsub;
+use function count;
+use function get_class;
+use function is_array;
+use function is_string;
+use function var_export;
+
 /**
  * Trait MoneyCalculator
  *
  * @author    USAMI Kenta <tadsan@zonu.me>
  * @copyright 2018 USAMI Kenta
  * @license   http://www.apache.org/licenses/LICENSE-2.0 Apache-2.0
+ *
+ * @psalm-immutable
  */
 trait MoneyCalculator
 {
     /**
      * Evaluate expression
      *
-     * @param  string[]|\Kane\Money[] ...$expr
-     * @return bool|static
-     * @throws \Kane\Currency\DifferenceException
-     * @throws \Kane\Currency\ScaleMismatchException
+     * @pure
+     * @param int|string|Money|array<int|string|Money> ...$expr
+     * @return static
      */
     public static function eval(...$expr)
     {
         $operator = array_shift($expr);
+        assert(is_string($operator));
+
+        /** @var array<int|string|Money|array<int|string|Money>> $operands */
         $operands = [];
 
         foreach ($expr as $obj) {
@@ -34,11 +52,8 @@ trait MoneyCalculator
     /**
      * Evaluate expression
      *
-     * @param string $operator
-     * @param \Kane\Money[] ...$operands
-     * @return bool|static
-     * @throws \Kane\Currency\DifferenceException
-     * @throws \Kane\Currency\ScaleMismatchException
+     * @pure
+     * @return static
      */
     private static function eval1(string $operator, Money ...$operands)
     {
@@ -58,69 +73,90 @@ trait MoneyCalculator
                 break;
         }
 
+        assert($amount !== null);
+
+        /** @psalm-suppress UnsafeGenericInstantiation */
         return new static($amount, $operands[0]->currency, $operands[0]->scale);
     }
 
-    private static function bcadd(int $scale, string ...$operands)
+    /**
+     * @pure
+     * @param array<Money|numeric-string> $operands
+     * @return numeric-string
+     */
+    private static function bcadd(int $scale, ...$operands): string
     {
         switch (count($operands)) {
             case 0:
                 throw new \BadMethodCallException();
             case 1:
-                return $operands[0];
+                return (string)$operands[0];
         }
 
         $v1 = array_shift($operands);
+        assert($v1 !== null);
         $v2 = array_shift($operands);
+        assert($v2 !== null);
 
-        array_unshift($operands, bcadd($v1, $v2, $scale));
+        array_unshift($operands, bcadd((string)$v1, (string)$v2, $scale));
 
         return self::bcadd($scale, ...$operands);
     }
 
-    private static function bcsub(int $scale, string ...$operands)
+    /**
+     * @pure
+     * @param array<Money|numeric-string> $operands
+     * @return numeric-string
+     */
+    private static function bcsub(int $scale, ...$operands): string
     {
         switch (count($operands)) {
             case 0:
                 throw new \BadMethodCallException();
             case 1:
-                return bcmul($operands[0], -1, $scale);
+                return bcmul((string)$operands[0], '-1', $scale);
         }
 
         $v1 = array_shift($operands);
+        assert($v1 !== null);
         $v2 = array_shift($operands);
+        assert($v2 !== null);
 
-        array_unshift($operands, bcsub($v1, $v2, $scale));
+        array_unshift($operands, bcsub((string)$v1, (string)$v2, $scale));
 
         if (count($operands) < 2) {
-            return $operands[0];
+            return (string)$operands[0];
         }
 
         return self::bcsub($scale, ...$operands);
     }
 
-    private static function bcmul(int $scale, string ...$operands)
+    /**
+     * @pure
+     * @param array<Money|numeric-string> $operands
+     * @return numeric-string
+     */
+    private static function bcmul(int $scale, ...$operands): string
     {
         switch (count($operands)) {
             case 0:
                 throw new \BadMethodCallException();
             case 1:
-                return $operands[0];
-            default:
+                return (string)$operands[0];
         }
 
         $v1 = array_shift($operands);
+        assert($v1 !== null);
         $v2 = array_shift($operands);
+        assert($v2 !== null);
 
-        array_unshift($operands, bcmul($v1, $v2, $scale));
+        array_unshift($operands, bcmul((string)$v1, (string)$v2, $scale));
 
         return self::bcmul($scale, ...$operands);
     }
 
     /**
-     * @param \Kane\Money[] ...$operands
-     * @throws \Kane\Currency\DifferenceException
-     * @throws \Kane\Currency\ScaleMismatchException
+     * @pure
      */
     private static function assertOperands(Money ...$operands): void
     {

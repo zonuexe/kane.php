@@ -8,19 +8,25 @@ namespace Kane;
  * @author    USAMI Kenta <tadsan@zonu.me>
  * @copyright 2018 USAMI Kenta
  * @license   http://www.apache.org/licenses/LICENSE-2.0 Apache-2.0
+ * @psalm-immutable
  */
 abstract class Currency
 {
-    /** @var Currency */
-    private $instances = [];
+    /** @var array<class-string<Currency>,static> */
+    private static $instances = [];
 
-    private function __construct() {}
+    final private function __construct() {}
 
     /**
+     * @pure
      * @return static
      */
     public static function getInstance()
     {
-        return $instances[static::class] = $instances[static::class] ?? new static;
+        /**
+         * @psalm-suppress ImpureStaticProperty
+         * @psalm-suppress PropertyTypeCoercion
+         */
+        return self::$instances[static::class] = self::$instances[static::class] ?? new static;
     }
 }
