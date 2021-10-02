@@ -2,6 +2,6 @@
 
 namespace Kane\Currency;
 
-class ScaleMismatchException extends \Exception
+class ScaleMismatchException extends \LogicException
 {
 }

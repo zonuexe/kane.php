@@ -2,6 +2,6 @@
 
 namespace Kane\Currency;
 
-class DifferenceException extends \Exception
+class DifferenceException extends \LogicException
 {
 }
