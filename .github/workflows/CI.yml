@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    paths-ignore:
+    - '**/*.md'
+
+jobs:
+  run:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest]
+        php-versions: ['7.4', '8.0', '8.1']
+    name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+        tools: pecl
+        extensions: ast, intl, mbstring, uopz, runkit7
+
+    - name: Setup Composer
+      run: 'make composer'
+
+    - name: Run tests
+      run: 'make test'
+
+    - name: Run static analysis
+      run: 'make analyse'
+
+    - name: Run mutation testing
+      if: false
+      env:
+        STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
+      run: 'make infection || true'
